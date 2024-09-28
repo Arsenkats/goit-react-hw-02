@@ -1,24 +1,45 @@
-/* eslint-disable no-irregular-whitespace */
-import userData from "./userData.json";
-import friends from "./friends.json";
-import Profile from "./components/Profile/Profile.1";
-import FriendList from "./components/FriendList/FriendList";
-import TransactionHistory from "./components/TransactionHistory/TransactionHistory";
-import transactions from "./transactions.json";
+import { useState, useEffect } from "react";
+import Description from "./components/Description";
+import Options from "./components/Options/Options";
+import Feedback from "./components/Feedback/Feedback";
+import Notification from "./components/Notification";
 
 const App = () => {
+  const [votingData, setVotingData] = useState(() => {
+    const savedVotes = window.localStorage.getItem("saved-votes");
+    return savedVotes
+      ? JSON.parse(savedVotes)
+      : { good: 0, neutral: 0, bad: 0 };
+  });
+
+  const totalFeedback = votingData.good + votingData.neutral + votingData.bad;
+
+  useEffect(() => {
+    window.localStorage.setItem("saved-votes", JSON.stringify(votingData));
+  }, [votingData]);
+
+  const handleDataClick = (variant) => {
+    setVotingData((prev) => ({ ...prev, [variant]: prev[variant] + 1 }));
+  };
+
+  const handleReset = () => {
+    setVotingData({ good: 0, neutral: 0, bad: 0 });
+  };
+
   return (
     <>
-           {" "}
-      <Profile
-        name={userData.username}
-        tag={userData.tag}
-        location={userData.location}
-        image={userData.avatar}
-        stats={userData.stats}
-      />
-      <FriendList friends={friends} />
-      <TransactionHistory items={transactions} />   {" "}
+      <Description />
+      <Options handleDataClick={handleDataClick} handleReset={handleReset} />
+      {totalFeedback !== 0 ? (
+        <Feedback
+          good={votingData.good}
+          neutral={votingData.neutral}
+          bad={votingData.bad}
+          totalFeedback={totalFeedback}
+        />
+      ) : (
+        <Notification />
+      )}
     </>
   );
 };
