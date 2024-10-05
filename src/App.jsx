@@ -29,7 +29,11 @@ const App = () => {
   return (
     <>
       <Description />
-      <Options handleDataClick={handleDataClick} handleReset={handleReset} />
+      <Options
+        handleDataClick={handleDataClick}
+        handleReset={handleReset}
+        totalFeedback={totalFeedback}
+      />
       {totalFeedback !== 0 ? (
         <Feedback
           good={votingData.good}

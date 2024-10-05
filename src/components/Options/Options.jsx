@@ -1,4 +1,4 @@
-const Options = ({ handleDataClick, handleReset }) => {
+const Options = ({ handleDataClick, handleReset, totalFeedback }) => {
   return (
     <div>
       <button type='button' onClick={() => handleDataClick("good")}>
@@ -10,9 +10,13 @@ const Options = ({ handleDataClick, handleReset }) => {
       <button type='button' onClick={() => handleDataClick("bad")}>
         Bad
       </button>
-      <button type='button' onClick={() => handleReset()}>
-        Reset
-      </button>
+      {totalFeedback > 0 ? (
+        <button type='button' onClick={() => handleReset()}>
+          Reset
+        </button>
+      ) : (
+        " "
+      )}
     </div>
   );
 };
